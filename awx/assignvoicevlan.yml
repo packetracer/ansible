@@ -1,0 +1,54 @@
+---
+- hosts: "{{ HOSTNAME }}"
+  connection: local
+
+  tasks:
+    - name: Initialize Fact
+      set_fact:
+        isAccess: "No"
+
+    - name: Finding MAC Address
+      register: command_out
+      ios_command:
+        commands: "sh mac add | i {{ MAC }}"
+
+    - name: Extracting Interface
+      set_fact:
+        macinterface: "{{item.split()[3]}}"
+      with_items: "{{command_out.stdout_lines}}"
+    
+    - name: Reset
+      meta: reset_connection
+
+    - name: Gather Port Configuration
+      register: show_out
+      ios_command:
+        commands: "show run interface {{ macinterface }}"
+
+    - name: Verify
+      set_fact:
+          isAccess: "Found"
+      with_items: "{{ show_out.stdout_lines }}"
+      when: '"switchport mode access" in "{{item}}"'
+
+    - name: Reset
+      meta: reset_connection
+      
+    - name: Set Voice VLAN and Bounce Port
+      register: set_out
+      ios_command:
+        commands:
+          - "config t"
+          - "interface {{macinterface}}"
+          - "switchport voice vlan {{ VLAN }}"
+          - "power inline never"
+          - "no power inline never"
+      when: 'isAccess == "Found"'
+
+    - debug:
+        msg: "\n*************\nAccess mode port {{macinterface }} is set to voice vlan {{ VLAN }}\n********\n"
+      when: 'isAccess == "Found"'
+
+    - debug:
+        msg: "\n************\nERROR - cannot change non access mode port"
+      when: 'isAccess != "Found"'
