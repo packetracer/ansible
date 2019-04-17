@@ -1,0 +1,6 @@
+{
+  "ansible_connection": "network_cli",
+  "ansible_user": "ansible_ro",
+  "ansible_ssh_pass": 'ansible_ro_pwd_here',
+  "ansible_network_os": "ios"
+}
