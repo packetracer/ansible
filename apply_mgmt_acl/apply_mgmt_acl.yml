@@ -1,0 +1,39 @@
+---
+- name: Create MGMT & Apply Access ACL
+  hosts: test
+  tasks:
+    - name: use RW creds
+      include_vars: "/ansible/creds/ansible_rw_cred.yml"
+
+    - name: Remove previous ACL
+      ios_config:
+        lines:
+          - no ip access-list ext MGMT-ACL
+
+    - name: Create ACL
+      ios_config:
+        lines:
+          - remark *** ALLOW ANSIBLE ***
+          - permit tcp host 1.1.1.1 any eq 22
+          - remark *** ALLOW NETWORK ENGINEER PERSISTENT ***
+          - permit tcp host 1.1.1.2 any eq 22
+          - permit tcp host 1.1.1.3 any eq 22
+          - remark *** ALLOW SOLARWINDS***
+          - permit tcp host 1.1.1.4 any eq 22
+          - remark *** ALLOW ZABBIX***
+          - permit tcp host 1.1.1.5 any eq 22
+        parents: ip access-list extended MGMT-ACL
+
+    - name: Apply ACL to VTY 0 4
+      ios_config:
+        lines:
+          - access-class MGMT-ACL in
+          - exec-timeout 5 0
+        parents: line vty 0 4
+
+    - name: Apply ACL to VTY 5 15
+      ios_config:
+        lines:
+          - access-class MGMT-ACL in
+          - exec-timeout 5 0
+        parents: line vty 5 15
