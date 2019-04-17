@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<style>
+section{
+  font-size: 15pt;
+  max-height: 430px;
+  max-width: 300px;
+}
+.loginform input[type=submit] {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: #64c8ef; /* Old browsers */
+  background: -moz-linear-gradient(top,  #64c8ef 0%, #00a2e2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#64c8ef), color-stop(100%,#00a2e2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #64c8ef 0%,#00a2e2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #64c8ef 0%,#00a2e2 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #64c8ef 0%,#00a2e2 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #64c8ef 0%,#00a2e2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#64c8ef', endColorstr='#00a2e2',GradientType=0 ); /* IE6-9 */
+  color: #fff;
+  padding: 5px 15px;
+  margin-right: 0;
+  margin-top: 15px;
+  border-radius: 3px;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+}
+</style>
+<link rel="shortcut icon" href="/ansible/favicon.ico">
+<TITLE>Play: Running Config</TITLE>
+<style>
+.loading {
+  border: 10px solid #f3f3f3;
+  border-radius: 60%;
+  border-top: 10px solid #3498db;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loginform {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+        0px 1px 0px 0px rgba(250, 250, 250, 0.5) ;
+}
+</style>
+</HEAD>
+<BODY>
+<CENTER><H1>Show Command</H1></CENTER>
+<CENTER>
+<section class="loginform">
+<h3>Please choose device</h3>
+<form action="return_output.py" method="post" target="iframe_a">
+<select name='devName'><br><br>
+<option value="1st_Floor_BDC">1st_Floor_BDC</option>
+<option value="1st_Floor_ED">1st_Floor_ED</option>
+<option value="1st_Floor_Morgue">1st_Floor_Morgue</option>
+<option value="1st_Floor_MRI_Closet">1st_Floor_MRI_Closet</option>
+<option value="1st_Floor_North">1st_Floor_North</option>
+<option value="2nd_Floor_LD2">2nd_Floor_LD2</option>
+<option value="2nd_Floor_LD">2nd_Floor_LD</option>
+<option value="2nd_Floor_OR">2nd_Floor_OR</option>
+<option value="2nd_Floor_West_Wiring">2nd_Floor_West_Wiring</option>
+<option value="2nd_Floor_MB">2nd_Floor_MB</option>
+<option value="3rd_Floor_Main">3rd_Floor_Main</option>
+<option value="3rd_Floor_West_Lab">3rd_Floor_West_Lab</option>
+<option value="4th_Floor_Main" >4th_Floor_Main</option>
+<option value="4th_Floor_West" >4th_Floor_West</option>
+<option value="5th_Floor_Main" >5th_Floor_Main</option>
+<option value="5th_Floor_West" >5th_Floor_West</option>
+<option value="6th_Floor_Main" >6th_Floor_Main</option>
+<option value="7th_Floor_Main" >7th_Floor_Main</option>
+<option value="7th_Floor_West" >7th_Floor_West</option>
+<option value="8th_Floor_Main" >8th_Floor_Main</option>
+<option value="9th_Floor_Main" >9th_Floor_Main</option>
+<option value="9th_Floor_West" >9th_Floor_West</option>
+<option value="10th_Floor_Main">10th_Floor_Main</option>
+<option value="10th_Floor_West">10th_Floor_West</option>
+<option value="Mezzanine"      >Mezzanine</option>
+<option value="Annex_A"        >Annex_A</option>
+<option value="Annex_C"        >Annex_C</option>
+<option value="BRC_1st_Floor">BRC_1st_Floor</option>
+<option value="BRC_2nd_Floor">BRC_2nd_Floor</option>
+<option value="BRC_3rd_Floor">BRC_3rd_Floor</option>
+<option value="BRC_4th_Floor">BRC_4th_Floor</option>
+<option value="Building37">Building37</option>
+<option value="2nd_Floor_Main">LGSH_2nd_Floor_Main</option>
+<option value="2nd_Floor_West">LGSH_2nd_Floor_West</option>
+<option value="POB_3rd_Floor"      >POB_3rd_Floor</option>
+<option value="Whit_1st_Floor"  >Whitney_1st_Floor</option>
+<option value="Whit_2nd_Floor"  >Whitney_2nd_Floor</option>
+<option value="Cath_Lab"             >Cath_Lab</option>
+<option value="Neuro_2ndFloor">Neuro_2ndFloor</option>
+<option value="Neuro_1stFloor">Neuro_1stFloor</option>
+<option value="Building35"       >Building35</option>
+<option value="Building35_2nd_Floor" >Building35_2nd_Floor</option>
+<option value="CLINED-3650-A"            >CLINED-3650-A</option>
+<option value="CLINED-3650-B"            >CLINED-3650-B</option>
+<option value="BLDG35-ENG-OFFICE"        >BLDG35-ENG-OFFICE</option>
+<option value="NETENG-LAB-SW"            >NETENG-LAB-SW</option>
+</select><br>
+<TABLE>
+  <TR><TD>
+    <label for="webCmd">Command</label>
+    </TD><TD>
+    <input type="text" name="webCmd" placeholder="show command" required>
+    </TD>
+  </TR><TR><TD>
+    <label for="user">Username</label>
+    </TD><TD>
+    <input type="text" name="user" placeholder="Privileged Acccount" required>
+    </TD>
+  </TR><TR><TD>
+    <label for="password">Password</label>
+   </TD><TD>
+    <input type="password" name="pwd" placeholder="password" required>
+   </TD></TR>
+</TABLE>
+    <input type="submit" value="Submit"></input>
+</section>
+</form>
+</CENTER>
+<hr>
+<CENTER>
+<iframe name="iframe_a" height="80%" width="80%"></iframe>
+</CENTER>
+</BODY>
+</HTML>
