@@ -1,0 +1,25 @@
+---
+- hosts: all
+  gather_facts: true
+
+  tasks:
+   - name: use ro creds
+     include_vars: "/ansible/creds/ansible_ro_cred.yml"
+
+   - name: show run
+     ios_command:
+       commands: show run
+     register: show_run
+
+   - name: Create Dated Directory
+     file: path=/ansible/backups/{{ ansible_date_time.date }} state=directory
+     run_once: true
+
+   - name: Create Group Subdir
+     file: path=/ansible/backups/{{ ansible_date_time.date }}/{{ group_names[0] }} state=directory
+     run_once: true
+
+   - name: save output to /etc/ansible/backups
+     copy:
+       content: "{{ show_run.stdout[0] }}"
+       dest: "/ansible/backups/{{ ansible_date_time.date }}/{{ group_names[0] }}/{{ inventory_hostname }}.txt"
