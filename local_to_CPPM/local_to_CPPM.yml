@@ -1,0 +1,82 @@
+---
+    - name: Assign aaa new model
+      ios_config:
+        lines:
+          - aaa new-model
+
+    - name: Create CPPM Entry
+      ios_config:
+        lines:
+          - server 10.137.66.68
+        parents: aaa group server tacacs+ CPPM
+
+    - name: Convert from local to CPPM - Global
+      ios_config:
+        lines:
+          - tacacs-server host 1.1.1.1 timeout 10 key RADIUS-KEY
+          - aaa authentication login CPPM_Auth group CPPM local
+          - aaa authentication enable default group CPPM enable
+          - aaa accounting session-duration ntp-adjusted
+          - aaa accounting exec CPPM_Auth start-stop group CPPM
+          - aaa accounting commands 10 CPPM_Auth start-stop group CPPM
+          - aaa accounting commands 15 CPPM_Auth start-stop group CPPM
+          - privilege exec level 10 show configuration
+          - privilege exec all level 10 show running-config
+          - aaa authorization commands 15 default group tacacs+ if-authenticated
+          - aaa session-id common
+          - privilege exec level 10 show configuration
+          - privilege configure all level 10 interface
+          - privilege exec level 10 show running-config
+          - privilege exec level 1 show version
+      ignore_errors: yes
+
+    - name: Remove line password vty 0 4
+      ios_config:
+        lines:
+         - no password 7
+        parents: ['line vty 0 4']
+
+    - name: Convert from local to CPPM - VTY 0 4
+      ios_config:
+        lines:
+          - accounting commands 10 CPPM_Auth
+          - accounting commands 15 CPPM_Auth
+          - accounting exec CPPM_Auth
+          - logging synchronous
+          - login authentication CPPM_Auth
+          - transport input ssh
+          - authorization exec CPPM_Auth
+        parents: ['line vty 0 4']
+
+    - name: Remove line password vty 5 15
+      ios_config:
+        lines:
+         - no password 7
+        parents: ['line vty 5 15']
+
+
+    - name: Convert from local to CPPM - VTY 5 15
+      ios_config:
+        lines:
+          - accounting commands 10 CPPM_Auth
+          - accounting commands 15 CPPM_Auth
+          - accounting exec CPPM_Auth
+          - logging synchronous
+          - login authentication CPPM_Auth
+          - transport input ssh
+          - authorization exec CPPM_Auth
+        parents: ['line vty 5 15']
+
+    - name: Set authorization
+      ios_config:
+        lines:
+         - aaa authorization config-commands
+         - aaa authorization exec CPPM_Auth group CPPM if-authenticated
+         - aaa authorization commands 10 CPPM_Auth group CPPM local
+         - aaa authorization commands 15 CPPM_Auth group CPPM local
+
+    - name: Set VTY Authorization
+      ios_config:
+        lines:
+         - authorization exec CPPM_Auth
+        parents: ['line vty 0 4','line vty 5 15']
