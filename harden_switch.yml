@@ -1,0 +1,42 @@
+- hosts: all
+  connection: local
+  gather_facts: False
+  vars:
+    interface_list: []
+  tasks:
+    - name: Get interface facts
+      ios_facts:
+        gather_subset: interfaces
+      
+    - name: Reset
+      meta: reset_connection
+
+    - name: Create list of interfaces that are down status
+      set_fact:
+        interface_list : "{{ interface_list + [item] }}"
+      when: hostvars[inventory_hostname]['ansible_facts']['net_interfaces']['{{item}}']['operstatus'] == "down"
+      with_items: "{{ hostvars[inventory_hostname]['ansible_facts']['net_interfaces'].keys() }}"
+      
+    - name: Reset
+      meta: reset_connection
+      
+    - name: Shutdown unused interfaces
+      ios_interface:
+        name: "{{ item }}"
+        enabled: False
+      with_items: "{{ interface_list }}"
+           
+    - name: Create dead VLAN
+      ios_vlan:
+        vlan_id: 999
+        name: DEAD-VLAN
+        state: present
+    
+    - name: Reset
+      meta: reset_connection
+    
+    - name: Set downed interfaces to dead VLAN
+      ios_l2_interface:
+        name: "{{ item }}"
+        access_vlan: 999
+      with_items: "{{ interface_list }}"
